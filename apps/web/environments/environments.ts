@@ -1,7 +1,7 @@
 export const webEnv: IWebEnv = {
-	isProd: process.env.ALMA_ENV === 'production',
+	isProd: process.env.NEXT_PUBLIC_ALMA_ENV === 'production',
 	api: {
-		apiUrl: process.env.ALMA_API_URL as string
+		apiUrl: process.env.NEXT_PUBLIC_ALMA_API_URL as string
 	}
 };
 

@@ -1,7 +1,7 @@
-import { fetchEpisodes } from 'apps/web/spotify-data/spotify-api';
+import { getUserEpisodes } from 'apps/web/spotify-data/spotify-api';
 
 export default async function Page() {
-	const episodes = await fetchEpisodes();
+	const episodes = await getUserEpisodes();
 
 	return (
 		<div>

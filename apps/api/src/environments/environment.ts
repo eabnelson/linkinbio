@@ -5,7 +5,7 @@ export const apiEnv: IApiEnv = {
 	api: {
 		port: Number(process.env.ALMA_API_PORT),
 		host: process.env.ALMA_API_HOST,
-		appUri: process.env.ALMA_APP_URI,
+		appUri: process.env.ALMA_APP_URL,
 		sessionSecret: process.env.SESSION_SECRET,
 		spotify: {
 			clientId: process.env.SPOTIFY_CLIENT_ID,

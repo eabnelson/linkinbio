@@ -3,20 +3,36 @@ import { useRouter } from 'next/navigation';
 
 const { api } = webEnv;
 
-// export function to use fetch episodes from /episodes endpoint
-export async function fetchEpisodes() {
+export async function getUserEpisodes() {
 	try {
-		const res = await fetch(`${api.apiUrl}/episodes`);
+		const response = await fetch(`${api.apiUrl}/episodes`);
 
-		if (res.ok) {
-			return res.json();
-		} else if (res.status === 401) {
+		if (response.ok) {
+			const episodes = await response.json();
+			return episodes;
+		} else if (response.status === 401) {
 			// Redirect to the login page if unauthorized
-			useRouter().push('/auth');
+			useRouter().push('/');
 		} else {
-			throw new Error(`Error fetching episodes: ${res.statusText}`);
+			throw new Error(`Error fetching episodes: ${response.statusText}`);
 		}
 	} catch (err) {
 		console.log(err);
+	}
+}
+
+export async function getEpisodeData() {
+	try {
+		const response = await fetch(`${api.apiUrl}/discover`);
+		if (response.ok) {
+			const data = await response.json();
+			return data;
+		} else if (response.status === 401) {
+			useRouter().push('/');
+		} else {
+			throw new Error(`Error fetching links: ${response.statusText}`);
+		}
+	} catch (error) {
+		console.error(error);
 	}
 }

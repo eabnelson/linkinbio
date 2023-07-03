@@ -105,7 +105,7 @@ export class AppController {
 
 			await this.redisClient.set('access_token', access_token);
 
-			res.redirect(`${process.env.APP_URI}/episodes`);
+			res.redirect(`${process.env.ALMA_APP_URL}/episodes`);
 		} catch (error) {
 			console.error(error);
 			res.status(500).send('Error exchanging authorization code for tokens');
@@ -211,13 +211,12 @@ export class AppController {
 		}
 
 		request.session.destroy((error) => {
-			``;
 			if (error) {
 				console.error('Error logging out:', error);
 				return res.status(500).send('Error logging out');
 			}
 
-			res.redirect(`${process.env.APP_URI}/auth`);
+			res.redirect(`${process.env.ALMA_APP_URL}/`);
 		});
 	}
 

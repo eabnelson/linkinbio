@@ -40,8 +40,6 @@ async function bootstrap() {
 	app.use(passport.initialize());
 	app.use(passport.session());
 
-	console.log('clientID:', api.spotify.clientId);
-
 	passport.use(
 		new SpotifyStrategy(
 			{
