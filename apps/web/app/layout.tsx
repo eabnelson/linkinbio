@@ -40,6 +40,9 @@ export default function RootLayout({
 							<Link href={'/discover'} className="text-xs uppercase text-black">
 								discover
 							</Link>
+							<Link href={'/auth'} className="text-xs uppercase text-black">
+								connect
+							</Link>
 						</div>
 					</nav>
 					{children}
