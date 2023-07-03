@@ -33,7 +33,7 @@ export class AppController {
 	) {}
 
 	private parseLinksFromDescription(description: string): string[] {
-		const urlRegex = /(https?:\/\/[^\s]+)/g;
+		const urlRegex = /(https?:\/\/\S+)/g;
 		const matches = description.match(urlRegex);
 		return matches || [];
 	}
@@ -55,7 +55,7 @@ export class AppController {
 
 		const state = process.env.SPOTIFY_STATE; // Generate a random state value
 
-		const queryParams = new URLSearchParams({
+		const queryParameters = new URLSearchParams({
 			response_type: 'code',
 			client_id: clientId,
 			redirect_uri: redirectUri,
@@ -63,17 +63,17 @@ export class AppController {
 			state
 		}).toString();
 
-		const authorizationUrl = `https://accounts.spotify.com/authorize?${queryParams}`;
+		const authorizationUrl = `https://accounts.spotify.com/authorize?${queryParameters}`;
 
 		res.json({ url: authorizationUrl });
 	}
 
 	@Get('auth/spotify/callback')
 	async spotifyAuthCallback(
-		@Req() req: SpotifyRequest & { session: SpotifySession },
+		@Req() request: SpotifyRequest & { session: SpotifySession },
 		@Res() res: SpotifyResponse
 	) {
-		const code = req.query.code;
+		const code = request.query.code;
 
 		const clientId = process.env.SPOTIFY_CLIENT_ID;
 		const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -100,8 +100,8 @@ export class AppController {
 			const { access_token, refresh_token } = response.data;
 
 			// Store the access_token and refresh_token in the session
-			req.session.accessToken = access_token;
-			req.session.refreshToken = refresh_token;
+			request.session.accessToken = access_token;
+			request.session.refreshToken = refresh_token;
 
 			await this.redisClient.set('access_token', access_token);
 
@@ -114,7 +114,7 @@ export class AppController {
 
 	@Get('episodes')
 	async getUserEpisodes(
-		@Req() req: SpotifyRequest & { session: SpotifySession },
+		@Req() request: SpotifyRequest & { session: SpotifySession },
 		@Res() res: SpotifyResponse
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
@@ -170,7 +170,7 @@ export class AppController {
 
 	@Get('discover')
 	async getEpisodeContent(
-		@Req() req: SpotifyRequest & { session: SpotifySession },
+		@Req() request: SpotifyRequest & { session: SpotifySession },
 		@Res() res: SpotifyResponse
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
@@ -204,16 +204,16 @@ export class AppController {
 	}
 
 	@Get('logout')
-	async logout(@Req() req: Request, @Res() res: Response) {
+	async logout(@Req() request: Request, @Res() res: Response) {
 		const accessToken = await this.redisClient.get('access_token');
 		if (accessToken) {
 			await this.redisClient.del('access_token');
 		}
 
-		req.session.destroy((err) => {
+		request.session.destroy((error) => {
 			``;
-			if (err) {
-				console.error('Error logging out:', err);
+			if (error) {
+				console.error('Error logging out:', error);
 				return res.status(500).send('Error logging out');
 			}
 
@@ -222,8 +222,8 @@ export class AppController {
 	}
 
 	@Get('auth/check')
-	async checkAuthStatus(@Req() req: Request) {
-		const session = req.session;
+	async checkAuthStatus(@Req() request: Request) {
+		const session = request.session;
 		const accessToken = await this.redisClient.get('access_token');
 
 		if (session && accessToken) {

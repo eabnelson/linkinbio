@@ -56,4 +56,4 @@ async function bootstrap() {
 	Logger.log(`🚀 Application is running on: http://${host}:${port}`);
 }
 
-bootstrap();
+bootstrap().catch(console.log);

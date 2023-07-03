@@ -12,7 +12,7 @@ import Redis from 'ioredis';
 			provide: 'REDIS_CLIENT',
 			useValue: new Redis({
 				host: process.env.REDIS_HOST_DEV,
-				port: parseInt(process.env.REDIS_PORT_DEV)
+				port: Number.parseInt(process.env.REDIS_PORT_DEV)
 			})
 		}
 	]

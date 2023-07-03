@@ -1,5 +1,5 @@
 const { createGlobPatternsForDependencies } = require('@nrwl/react/tailwind');
-const { join } = require('path');
+const { join } = require('node:path');
 
 module.exports = {
 	content: [
