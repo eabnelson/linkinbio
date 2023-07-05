@@ -23,11 +23,16 @@ async function handleLogin() {
 
 async function handleLogout() {
 	try {
-		const response = await fetch(`${api.apiUrl}/logout`);
+		const response = await fetch(`${api.apiUrl}/logout`, {
+			method: 'GET',
+			credentials: 'include'
+		});
 
 		if (!response.ok) {
 			console.error('Error logging out:', response.statusText);
 		}
+
+		window.location.reload();
 	} catch (error) {
 		console.error('Error logging out:', error);
 	}
