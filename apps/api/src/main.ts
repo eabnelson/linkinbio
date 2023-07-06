@@ -18,7 +18,9 @@ async function bootstrap() {
 
 	app.enableCors({
 		origin: api.appUri,
-		credentials: true
+		credentials: true,
+		methods: 'GET, POST, PUT, DELETE',
+		allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
 	});
 
 	const sessionStore = new RedisStore({
