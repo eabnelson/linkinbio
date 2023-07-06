@@ -4,7 +4,7 @@ const isProd = process.env.ALMA_ENV === 'production';
 
 export const apiEnv: IApiEnv = {
 	api: {
-		port: Number(process.env.ALMA_API_PORT),
+		port: isProd ? Number(process.env.ALMA_API_PORT_PROD) : Number(process.env.ALMA_API_PORT),
 		host: isProd ? process.env.ALMA_API_HOST_PROD : process.env.ALMA_API_HOST,
 		appUri: isProd ? process.env.ALMA_APP_URL_PROD : process.env.ALMA_APP_URL,
 		apiUri: isProd ? process.env.ALMA_API_URL_PROD : process.env.ALMA_API_URL,
