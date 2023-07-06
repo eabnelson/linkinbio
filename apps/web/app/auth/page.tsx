@@ -1,67 +1,46 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import useSWR, { mutate, preload } from 'swr';
 import { webEnv } from '../../environments/environments';
 
 const { api } = webEnv;
 
-async function handleLogin() {
-	try {
-		const response = await fetch(`${api.apiUrl}/auth/spotify`, {
-			method: 'GET',
-			credentials: 'include'
-		});
+const authFetcher = async (url: string) => {
+	const response = await fetch(url);
+	const data = await response.json();
+	return data;
+};
 
-		const { url: authorizationUrl } = await response.json();
+preload(`${api.apiUrl}/auth/check`, authFetcher);
 
-		window.location.href = authorizationUrl;
-	} catch (error) {
-		console.error('Error logging in with Spotify:', error);
-	}
-}
-
-async function handleLogout() {
-	try {
-		const response = await fetch(`${api.apiUrl}/logout`, {
-			method: 'GET',
-			credentials: 'include'
-		});
-
-		if (!response.ok) {
-			console.error('Error logging out:', response.statusText);
+export default function Auth() {
+	const handleLogin = async () => {
+		try {
+			const { url } = await authFetcher(`${api.apiUrl}/auth/spotify`);
+			window.location.href = url;
+		} catch (error) {
+			console.error('Error logging in with Spotify:', error);
 		}
+	};
 
-		window.location.reload();
-	} catch (error) {
-		console.error('Error logging out:', error);
-	}
-}
-
-async function checkAuthStatus() {
-	try {
-		const response = await fetch(`${api.apiUrl}/auth/check`, {
-			method: 'GET',
-			credentials: 'include'
-		});
-
-		if (response.ok) {
-			const { authenticated } = await response.json();
-			return authenticated;
-		} else {
-			console.error('Error checking authentication status:', response.statusText);
+	const handleLogout = async () => {
+		try {
+			await authFetcher(`${api.apiUrl}/logout`);
+			mutate(`${api.apiUrl}/auth/check`);
+		} catch (error) {
+			console.error('Error logging out:', error);
 		}
-	} catch (error) {
+	};
+
+	const { data, error } = useSWR(`${api.apiUrl}/auth/check`, authFetcher);
+
+	if (error) {
 		console.error('Error checking authentication status:', error);
 	}
-}
-
-export default async function Auth() {
-	const authenticated = await checkAuthStatus();
 
 	return (
 		<div>
-			{authenticated ? (
+			{data?.authenticated ? (
 				<button onClick={handleLogout}>disconnect spotify</button>
 			) : (
 				<button onClick={handleLogin}>connect your Spotify to get started</button>

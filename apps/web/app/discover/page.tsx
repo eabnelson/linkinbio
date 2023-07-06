@@ -1,48 +1,49 @@
 'use client';
 
 import { webEnv } from '../../environments/environments';
-import { useRouter } from 'next/navigation';
+import Auth from '../auth/page';
+import useSWR from 'swr';
 const { api } = webEnv;
 
-export function useUserEpisodeData() {
-	const router = useRouter();
-	const getEpisodeData = async () => {
-		try {
-			const response = await fetch(`${api.apiUrl}/discover`);
+const fetchEpisodeData = async (url: string) => {
+	const response = await fetch(url);
+	if (response.status === 401) {
+		return {
+			status: response.status,
+			episodes: []
+		};
+	}
 
-			if (response.ok) {
-				const data = await response.json();
-				return data;
-			} else if (response.status === 401) {
-				router.push('/');
-			} else {
-				throw new Error(`Error fetching links: ${response.statusText}`);
-			}
-		} catch (error) {
-			console.error(error);
-		}
+	const data = await response.json();
+
+	return {
+		status: response.status,
+		episodes: [...data]
 	};
-	return getEpisodeData;
-}
+};
 
-export default async function Page() {
-	const getEpisodeData = useUserEpisodeData();
-	const episodeData = await getEpisodeData();
+export default function Page() {
+	const { data, error } = useSWR(`${api.apiUrl}/discover`, fetchEpisodeData);
+
+	if (!data) return <div>Loading...</div>;
+
+	if (data.status === 401) return <Auth />;
+
+	if (error) return <div>An error has occurred.</div>;
+
+	const { episodes } = data;
 
 	return (
-		<div>
-			<h1>discover</h1>
-			<ul>
-				{episodeData.map((episode: any, index: number) => (
-					<li key={index}>
-						<div>
-							<a href={episode.link} target="_blank" rel="noopener noreferrer">
-								<div>{episode.link}</div>
-							</a>
-						</div>
-					</li>
-				))}
-			</ul>
-		</div>
+		<ul>
+			{episodes.map((episode: any, index: number) => (
+				<li key={index}>
+					<div>
+						<a href={episode.link} target="_blank" rel="noopener noreferrer">
+							<div>{episode.link}</div>
+						</a>
+					</div>
+				</li>
+			))}
+		</ul>
 	);
 }

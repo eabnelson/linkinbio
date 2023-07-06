@@ -1,36 +1,38 @@
 'use client';
 
 import { webEnv } from '../../environments/environments';
-import { useRouter } from 'next/navigation';
+import Auth from '../auth/page';
+import useSWR from 'swr';
 const { api } = webEnv;
 
-export function useUserEpisodes() {
-	const router = useRouter();
+const fetchEpisodes = async (url: string) => {
+	const response = await fetch(url);
 
-	const getUserEpisodes = async () => {
-		try {
-			const response = await fetch(`${api.apiUrl}/episodes`);
+	if (response.status === 401) {
+		return {
+			status: response.status,
+			episodes: []
+		};
+	}
 
-			if (response.ok) {
-				const episodes = await response.json();
-				return episodes;
-			} else if (response.status === 401) {
-				// Redirect to the login page if unauthorized
-				router.push('/');
-			} else {
-				throw new Error(`Error fetching episodes: ${response.statusText}`);
-			}
-		} catch (err) {
-			console.log(err);
-		}
+	const data = await response.json();
+
+	return {
+		status: response.status,
+		episodes: [...data]
 	};
+};
 
-	return getUserEpisodes;
-}
+export default function Page() {
+	const { data, error } = useSWR(`${api.apiUrl}/episodes`, fetchEpisodes);
 
-export default async function Page() {
-	const getUserEpisodes = useUserEpisodes();
-	const episodes = await getUserEpisodes();
+	if (!data) return <div>Loading...</div>;
+
+	if (data.status === 401) return <Auth />;
+
+	if (error) return <div>An error has occurred.</div>;
+
+	const { episodes } = data;
 
 	return (
 		<div>

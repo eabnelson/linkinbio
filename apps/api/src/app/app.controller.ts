@@ -219,9 +219,9 @@ export class AppController {
 					return res.status(500).send('Error logging out');
 				}
 			});
-
-			return res.status(200).send('Logged out');
 		}
+
+		res.status(200).json({ authenticated: false });
 	}
 
 	@Get('auth/check')
@@ -233,10 +233,10 @@ export class AppController {
 			return {
 				authenticated: true
 			};
+		} else {
+			return {
+				authenticated: false
+			};
 		}
-
-		return {
-			authenticated: false
-		};
 	}
 }
