@@ -35,7 +35,10 @@ export class AppController {
 	private parseLinksFromDescription(description: string): string[] {
 		const urlRegex = /(https?:\/\/\S+)/g;
 		const matches = description.match(urlRegex);
-		return matches || [];
+
+		const links = matches?.map((match) => match.replace(/"$/, '')) ?? [];
+
+		return links;
 	}
 
 	@Get()
@@ -130,13 +133,13 @@ export class AppController {
 					Authorization: `Bearer ${accessToken}`
 				}
 			});
-
 			const episodes = response.data.items.map((item) => {
 				return {
 					added_at: item.added_at,
 					episode: {
 						description: item.episode.description,
 						duration_ms: item.episode.duration_ms,
+						html_description: item.episode.html_description,
 						href: item.episode.href,
 						id: item.episode.id,
 						images: item.episode.images,
@@ -188,7 +191,7 @@ export class AppController {
 			});
 
 			const episodes = response.data.items.flatMap((item: any) => {
-				const description = item.episode.description;
+				const description = item.episode.html_description;
 				const linkMatches = this.parseLinksFromDescription(description);
 
 				return {

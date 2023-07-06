@@ -44,12 +44,25 @@ export default function Page() {
 	const { episodes } = data;
 
 	return (
-		<div className="text-center">
-			<ul>
+		<div className="flex justify-center">
+			<ul className="text-center">
 				{episodes.map((episode: any) => (
-					<li key={episode.episode.id} className="mb-4">
-						<div className="text-lg">{episode.episode.name}</div>
-						<div className="text-sm font-bold italic">{episode.episode.show.name}</div>
+					<li key={episode.episode.id} className="mb-4 flex items-center">
+						{episode.episode.images && episode.episode.images.length > 0 && (
+							<img
+								src={episode.episode.images[0].url}
+								alt={episode.episode.name}
+								className="mr-2 h-16 w-auto rounded-md"
+							/>
+						)}
+						<div className="text-left">
+							<div className="text-lg">
+								<span>{episode.episode.name}</span>
+							</div>
+							<div className="text-sm font-bold italic">
+								{episode.episode.show.name}
+							</div>
+						</div>
 					</li>
 				))}
 			</ul>

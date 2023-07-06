@@ -22,7 +22,7 @@ export default function RootLayout({
 		<html lang="en" className={lato.className}>
 			<body className="flex flex-col items-center">
 				<div className="w-full max-w-screen-2xl pl-6 pr-6 md:pl-14 md:pr-14">
-					<nav className="flex h-20 items-center justify-between md:h-28 lg:h-36">
+					<nav className="sticky top-0 z-10 flex h-20 items-center justify-between bg-white md:h-28 lg:h-36">
 						<div>
 							<Link href="/" className="text-lg font-bold uppercase text-black">
 								alma
