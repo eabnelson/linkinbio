@@ -39,11 +39,15 @@ export default function Auth() {
 	}
 
 	return (
-		<div>
+		<div className="text-center">
 			{data?.authenticated ? (
-				<button onClick={handleLogout}>disconnect spotify</button>
+				<button onClick={handleLogout}>
+					disconnect <span className="text-green-500">Spotify</span>
+				</button>
 			) : (
-				<button onClick={handleLogin}>connect your Spotify to get started</button>
+				<button onClick={handleLogin}>
+					connect your <span className="text-green-500">Spotify</span> to get started
+				</button>
 			)}
 		</div>
 	);

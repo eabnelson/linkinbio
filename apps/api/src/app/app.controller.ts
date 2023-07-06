@@ -191,9 +191,10 @@ export class AppController {
 				const description = item.episode.description;
 				const linkMatches = this.parseLinksFromDescription(description);
 
-				return linkMatches.map((link: string) => ({
-					link
-				}));
+				return {
+					showName: item.episode.name,
+					links: linkMatches.map((link: string) => ({ link }))
+				};
 			});
 
 			res.json(episodes);

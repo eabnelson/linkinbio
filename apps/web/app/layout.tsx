@@ -23,21 +23,16 @@ export default function RootLayout({
 			<body className="flex flex-col items-center">
 				<div className="w-full max-w-screen-2xl pl-6 pr-6 md:pl-14 md:pr-14">
 					<nav className="flex h-20 items-center justify-between md:h-28 lg:h-36">
-						<Link href={'/'}>
-							<Image
-								src={'/logo.svg'}
-								width={85}
-								height={15}
-								alt={'logo'}
-								className="md:h-5 md:w-28"
-							/>
-						</Link>
-
-						<div className="flex gap-10">
-							<Link href={'/episodes'} className="text-xs uppercase text-black">
+						<div>
+							<Link href="/" className="text-lg font-bold uppercase text-black">
+								alma
+							</Link>
+						</div>
+						<div className="ml-auto flex gap-10">
+							<Link href="/episodes" className="text-xs uppercase text-black">
 								episodes
 							</Link>
-							<Link href={'/discover'} className="text-xs uppercase text-black">
+							<Link href="/discover" className="text-xs uppercase text-black">
 								discover
 							</Link>
 						</div>
