@@ -137,7 +137,7 @@ export class AppController {
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 		const userId = request.session.userId;
-		const accessToken = await this.redisClient.get(`user:${userId}`);
+		const accessToken = request.session.accessToken;
 
 		if (!accessToken) {
 			return res.status(401).send('Unauthorized');
@@ -195,8 +195,7 @@ export class AppController {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 
 		const userId = request.session.userId;
-		const accessToken = await this.redisClient.get(`user:${userId}`);
-
+		const accessToken = request.session.accessToken;
 		if (!accessToken) {
 			return res.status(401).send('Unauthorized');
 		}
@@ -231,7 +230,7 @@ export class AppController {
 		@Res() res: Response
 	) {
 		const userId = request.session.userId;
-		const accessToken = await this.redisClient.get(`user:${userId}`);
+		const accessToken = request.session.accessToken;
 
 		if (accessToken) {
 			await this.redisClient.del(`user:${userId}`);
@@ -252,7 +251,7 @@ export class AppController {
 	@Get('auth/check')
 	async checkAuthStatus(@Req() request: SpotifyRequest & { session: SpotifySession }) {
 		const userId = request.session.userId;
-		const accessToken = await this.redisClient.get(`user:${userId}`);
+		const accessToken = request.session.accessToken;
 
 		if (userId && accessToken) {
 			return {
