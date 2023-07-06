@@ -5,8 +5,7 @@
 	"scripts": {
 		"serve": "nx run-many --target=serve --all --parallel",
 		"start:api": "nx serve api",
-		"start:web": "nx serve web",
-		"verify": "nx format:write && nx format:check && nx affected --target=lint --fix --parallel=3 && npx nx affected --target=test --parallel=3 && nx affected --target=build --parallel=3 --exclude=web"
+		"start:web": "nx serve web"
 	},
 	"private": true,
 	"dependencies": {
