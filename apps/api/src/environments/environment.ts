@@ -23,7 +23,7 @@ export const apiEnv: IApiEnv = {
 	},
 	redis: {
 		host: isProd ? process.env.REDIS_HOST_PROD : process.env.REDIS_HOST_DEV,
-		port: isProd ? process.env.REDIS_PORT_PROD : process.env.REDIS_PORT_DEV,
+		port: isProd ? Number(process.env.REDIS_PORT_PROD) : Number(process.env.REDIS_PORT_DEV),
 		password: isProd ? process.env.REDIS_PASSWORD_PROD : process.env.REDIS_PASSWORD_DEV
 	}
 };
@@ -47,7 +47,7 @@ export interface IApiEnv {
 	};
 	redis: {
 		host: string;
-		port: string;
+		port: number;
 		password: string;
 	};
 }
