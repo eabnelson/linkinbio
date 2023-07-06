@@ -5,7 +5,7 @@ const isProd = process.env.ALMA_ENV === 'production';
 export const apiEnv: IApiEnv = {
 	api: {
 		port: Number(process.env.ALMA_API_PORT),
-		host: process.env.ALMA_API_HOST,
+		host: isProd ? process.env.ALMA_API_HOST_PROD : process.env.ALMA_API_HOST,
 		appUri: isProd ? process.env.ALMA_APP_URL_PROD : process.env.ALMA_APP_URL,
 		apiUri: isProd ? process.env.ALMA_API_URL_PROD : process.env.ALMA_API_URL,
 		sessionSecret: process.env.SESSION_SECRET,
@@ -23,7 +23,8 @@ export const apiEnv: IApiEnv = {
 	},
 	redis: {
 		host: isProd ? process.env.REDIS_HOST_PROD : process.env.REDIS_HOST_DEV,
-		port: isProd ? process.env.REDIS_PORT_PROD : process.env.REDIS_PORT_DEV
+		port: isProd ? process.env.REDIS_PORT_PROD : process.env.REDIS_PORT_DEV,
+		password: isProd ? process.env.REDIS_PASSWORD_PROD : process.env.REDIS_PASSWORD_DEV
 	}
 };
 
@@ -47,5 +48,6 @@ export interface IApiEnv {
 	redis: {
 		host: string;
 		port: string;
+		password: string;
 	};
 }

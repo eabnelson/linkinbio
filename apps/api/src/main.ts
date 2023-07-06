@@ -16,8 +16,6 @@ async function bootstrap() {
 
 	const redisClient = app.get<Redis.Redis>('REDIS_CLIENT');
 
-	console.log('redisPort', redis.port);
-
 	app.enableCors({
 		origin: api.appUri,
 		credentials: true

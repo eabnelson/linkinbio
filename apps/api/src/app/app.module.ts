@@ -16,7 +16,8 @@ const { redis } = apiEnv;
 			provide: 'REDIS_CLIENT',
 			useValue: new Redis({
 				host: redis.host,
-				port: Number.parseInt(redis.port)
+				port: Number.parseInt(redis.port),
+				password: redis.password
 			})
 		}
 	]
