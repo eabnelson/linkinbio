@@ -6,7 +6,7 @@ import { webEnv } from '../../environments/environments';
 const { api } = webEnv;
 
 const authFetcher = async (url: string) => {
-	const response = await fetch(url);
+	const response = await fetch(url, { method: 'GET', credentials: 'include' });
 	const data = await response.json();
 	return data;
 };

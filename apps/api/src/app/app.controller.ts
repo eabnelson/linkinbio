@@ -20,6 +20,7 @@ interface SpotifyResponse extends Response {
 	session: {
 		accessToken?: string;
 		refreshToken?: string;
+		userId?: string;
 		save: () => void;
 	};
 }
@@ -27,6 +28,7 @@ interface SpotifyResponse extends Response {
 interface SpotifySession extends Session {
 	accessToken?: string;
 	refreshToken?: string;
+	userId?: string;
 }
 
 @Controller()
@@ -106,11 +108,20 @@ export class AppController {
 
 			const { access_token, refresh_token } = response.data;
 
+			const userResponse = await axios.get('https://api.spotify.com/v1/me', {
+				headers: {
+					Authorization: `Bearer ${access_token}`
+				}
+			});
+
+			const userId = userResponse.data.id;
+
 			// Store the access_token and refresh_token in the session
 			request.session.accessToken = access_token;
 			request.session.refreshToken = refresh_token;
+			request.session.userId = userId;
 
-			await this.redisClient.set('access_token', access_token);
+			await this.redisClient.set(`user:${userId}`, access_token);
 
 			res.redirect(`${api.appUri}/episodes`);
 		} catch (error) {
@@ -125,8 +136,9 @@ export class AppController {
 		@Res() res: SpotifyResponse
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
+		const userId = request.session.userId;
+		const accessToken = await this.redisClient.get(`user:${userId}`);
 
-		const accessToken = await this.redisClient.get('access_token');
 		if (!accessToken) {
 			return res.status(401).send('Unauthorized');
 		}
@@ -182,7 +194,9 @@ export class AppController {
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 
-		const accessToken = await this.redisClient.get('access_token');
+		const userId = request.session.userId;
+		const accessToken = await this.redisClient.get(`user:${userId}`);
+
 		if (!accessToken) {
 			return res.status(401).send('Unauthorized');
 		}
@@ -212,15 +226,18 @@ export class AppController {
 	}
 
 	@Get('logout')
-	async logout(@Req() request: Request, @Res() res: Response) {
-		const session = request.session;
-		const accessToken = await this.redisClient.get('access_token');
+	async logout(
+		@Req() request: SpotifyRequest & { session: SpotifySession },
+		@Res() res: Response
+	) {
+		const userId = request.session.userId;
+		const accessToken = await this.redisClient.get(`user:${userId}`);
 
 		if (accessToken) {
-			await this.redisClient.del('access_token');
+			await this.redisClient.del(`user:${userId}`);
 		}
 
-		if (session) {
+		if (userId) {
 			request.session.destroy((error) => {
 				if (error) {
 					console.error('Error logging out:', error);
@@ -233,11 +250,11 @@ export class AppController {
 	}
 
 	@Get('auth/check')
-	async checkAuthStatus(@Req() request: Request) {
-		const session = request.session;
-		const accessToken = await this.redisClient.get('access_token');
+	async checkAuthStatus(@Req() request: SpotifyRequest & { session: SpotifySession }) {
+		const userId = request.session.userId;
+		const accessToken = await this.redisClient.get(`user:${userId}`);
 
-		if (session && accessToken) {
+		if (userId && accessToken) {
 			return {
 				authenticated: true
 			};
