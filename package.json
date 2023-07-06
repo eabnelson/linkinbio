@@ -5,7 +5,9 @@
 	"scripts": {
 		"serve": "nx run-many --target=serve --all --parallel",
 		"start:api": "nx serve api",
-		"start:web": "nx serve web"
+		"start:web": "nx serve web",
+		"cd:api": "npx nx build api --prod",
+		"cd:web": "npx nx build web --prod"
 	},
 	"private": true,
 	"dependencies": {
