@@ -1,37 +1,51 @@
 import * as process from 'node:process';
 
+const isProd = process.env.ALMA_ENV === 'production';
+
 export const apiEnv: IApiEnv = {
-	isProd: process.env.ALMA_ENV === 'production',
 	api: {
 		port: Number(process.env.ALMA_API_PORT),
 		host: process.env.ALMA_API_HOST,
-		appUri: process.env.ALMA_APP_URL,
+		appUri: isProd ? process.env.ALMA_APP_URL_PROD : process.env.ALMA_APP_URL,
+		apiUri: isProd ? process.env.ALMA_API_URL_PROD : process.env.ALMA_API_URL,
 		sessionSecret: process.env.SESSION_SECRET,
 		spotify: {
 			clientId: process.env.SPOTIFY_CLIENT_ID,
 			clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-			callbackUrl: process.env.CALLBACK_URL
+			state: process.env.SPOTIFY_STATE,
+			callbackUrl: isProd
+				? process.env.SPOTIFY_REDIRECT_URI_PROD
+				: process.env.SPOTIFY_REDIRECT_URI
 		}
 	},
 	db: {
 		url: process.env.ALMA_DB_URL
+	},
+	redis: {
+		host: isProd ? process.env.REDIS_HOST_PROD : process.env.REDIS_HOST_DEV,
+		port: isProd ? process.env.REDIS_PORT_PROD : process.env.REDIS_PORT_DEV
 	}
 };
 
 export interface IApiEnv {
-	isProd: boolean;
 	api: {
 		port: number;
 		host: string;
 		appUri: string;
+		apiUri: string;
 		sessionSecret: string;
 		spotify: {
 			clientId: string;
 			clientSecret: string;
+			state: string;
 			callbackUrl: string;
 		};
 	};
 	db: {
 		url: string;
+	};
+	redis: {
+		host: string;
+		port: string;
 	};
 }

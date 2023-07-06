@@ -6,6 +6,10 @@ import axios from 'axios';
 
 import { AppService } from './app.service';
 
+import { apiEnv } from '../environments/environment';
+
+const { api } = apiEnv;
+
 interface SpotifyRequest extends Request {
 	query: {
 		code: string;
@@ -48,15 +52,15 @@ export class AppController {
 
 	@Get('auth/spotify')
 	spotifyAuth(@Res() res: Response) {
-		const clientId = process.env.SPOTIFY_CLIENT_ID;
-		const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
+		const clientId = api.spotify.clientId;
+		const redirectUri = api.spotify.callbackUrl;
 		const scopes = [
 			'user-read-recently-played',
 			'user-library-read',
 			'user-read-playback-position'
 		];
 
-		const state = process.env.SPOTIFY_STATE; // Generate a random state value
+		const state = api.spotify.state;
 
 		const queryParameters = new URLSearchParams({
 			response_type: 'code',
@@ -78,9 +82,9 @@ export class AppController {
 	) {
 		const code = request.query.code;
 
-		const clientId = process.env.SPOTIFY_CLIENT_ID;
-		const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-		const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
+		const clientId = api.spotify.clientId;
+		const clientSecret = api.spotify.clientSecret;
+		const redirectUri = api.spotify.callbackUrl;
 
 		// Exchange the authorization code for tokens
 		try {
@@ -108,7 +112,7 @@ export class AppController {
 
 			await this.redisClient.set('access_token', access_token);
 
-			res.redirect(`${process.env.ALMA_APP_URL}/episodes`);
+			res.redirect(`${api.appUri}/episodes`);
 		} catch (error) {
 			console.error(error);
 			res.status(500).send('Error exchanging authorization code for tokens');

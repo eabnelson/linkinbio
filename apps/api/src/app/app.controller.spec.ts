@@ -4,6 +4,10 @@ import Redis from 'ioredis';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { apiEnv } from '../environments/environment';
+
+const { redis } = apiEnv;
+
 describe('AppController', () => {
 	let app: TestingModule;
 
@@ -15,8 +19,8 @@ describe('AppController', () => {
 				{
 					provide: 'REDIS_CLIENT',
 					useValue: new Redis({
-						host: process.env.REDIS_HOST_DEV,
-						port: Number.parseInt(process.env.REDIS_PORT_DEV)
+						host: redis.host,
+						port: Number.parseInt(redis.port)
 					})
 				}
 			]

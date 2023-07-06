@@ -9,12 +9,14 @@ import * as Redis from 'ioredis';
 import { AppModule } from './app/app.module';
 import { apiEnv } from './environments/environment';
 
-const { isProd, api } = apiEnv;
+const { api, redis } = apiEnv;
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 
 	const redisClient = app.get<Redis.Redis>('REDIS_CLIENT');
+
+	console.log('redisPort', redis.port);
 
 	app.enableCors({
 		origin: api.appUri,
