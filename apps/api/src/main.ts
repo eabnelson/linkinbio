@@ -33,7 +33,7 @@ async function bootstrap() {
 			saveUninitialized: false,
 			cookie: {
 				secure: api.isProd ? true : false,
-				sameSite: 'none',
+				// sameSite: 'none',
 				httpOnly: false
 			}
 		})

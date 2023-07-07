@@ -108,22 +108,11 @@ export class AppController {
 
 			const { access_token, refresh_token } = response.data;
 
-			const userResponse = await axios.get('https://api.spotify.com/v1/me', {
-				headers: {
-					Authorization: `Bearer ${access_token}`
-				}
-			});
-
-			const userId = userResponse.data.id;
-
-			// Store the access_token and refresh_token in the session
 			request.session.accessToken = access_token;
 			request.session.refreshToken = refresh_token;
-			request.session.userId = userId;
 
-			await this.redisClient.set(`user:${userId}`, access_token);
+			await this.redisClient.set(`session:${request.sessionID}`, access_token);
 
-			res.cookie('sessionData', JSON.stringify(request.session));
 			res.redirect(`${api.appUri}/episodes`);
 		} catch (error) {
 			console.error(error);
@@ -136,13 +125,13 @@ export class AppController {
 		@Req() request: SpotifyRequest & { session: SpotifySession },
 		@Res() res: SpotifyResponse
 	) {
-		res.header('Access-Control-Allow-Credentials', 'true');
 		const url = 'https://api.spotify.com/v1/me/episodes';
-		const userId = request.session.userId;
+		const sessionId = request.sessionID;
 
-		if (!userId) console.error('No user id found', JSON.stringify(request.session, null, 2));
+		if (!sessionId)
+			console.error('No session id found', JSON.stringify(request.sessionID, null, 2));
 
-		const accessToken = await this.redisClient.get(`user:${userId}`);
+		const accessToken = await this.redisClient.get(`session:${sessionId}`);
 
 		if (!accessToken)
 			console.error('No accessToken found', JSON.stringify(request.session, null, 2));
@@ -202,8 +191,10 @@ export class AppController {
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 
-		const userId = request.session.userId;
-		const accessToken = await this.redisClient.get(`user:${userId}`);
+		const sessionId = request.sessionID;
+
+		const accessToken = await this.redisClient.get(`session:${sessionId}`);
+
 		if (!accessToken) {
 			return res.status(401).send('Unauthorized');
 		}
@@ -258,10 +249,10 @@ export class AppController {
 
 	@Get('auth/check')
 	async checkAuthStatus(@Req() request: SpotifyRequest & { session: SpotifySession }) {
-		const userId = request.session.userId;
-		const accessToken = await this.redisClient.get(`user:${userId}`);
+		const sessionId = request.sessionID;
+		const accessToken = await this.redisClient.get(`session:${sessionId}`);
 
-		if (userId && accessToken) {
+		if (sessionId && accessToken) {
 			return {
 				authenticated: true
 			};
