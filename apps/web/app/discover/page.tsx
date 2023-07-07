@@ -3,16 +3,14 @@
 import { webEnv } from '../../environments/environments';
 import Auth from '../auth/page';
 import useSWR from 'swr';
-import Cookies from 'js-cookie';
 const { api } = webEnv;
 
 const fetchEpisodeData = async (url: string) => {
-	const sessionData = Cookies.get('sessionData');
 	const response = await fetch(url, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			Cookie: `sessionData=${sessionData}`
+			Cookie: document.cookie
 		}
 	});
 

@@ -2,17 +2,15 @@
 
 import useSWR, { mutate } from 'swr';
 import { webEnv } from '../../environments/environments';
-import Cookies from 'js-cookie';
 
 const { api } = webEnv;
 
 const authFetcher = async (url: string) => {
-	const sessionData = Cookies.get('sessionData');
 	const response = await fetch(url, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			Cookie: `sessionData=${sessionData}`
+			Cookie: document.cookie
 		}
 	});
 
