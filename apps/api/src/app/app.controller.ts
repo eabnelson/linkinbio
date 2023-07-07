@@ -136,6 +136,7 @@ export class AppController {
 		@Req() request: SpotifyRequest & { session: SpotifySession },
 		@Res() res: SpotifyResponse
 	) {
+		res.header('Access-Control-Allow-Credentials', 'true');
 		const url = 'https://api.spotify.com/v1/me/episodes';
 		const userId = request.session.userId;
 

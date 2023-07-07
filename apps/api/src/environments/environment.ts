@@ -1,4 +1,4 @@
-import * as process from 'node:process';
+import process from 'process';
 
 const isProd = process.env.ALMA_ENV === 'production';
 

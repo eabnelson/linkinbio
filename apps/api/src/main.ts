@@ -33,9 +33,8 @@ async function bootstrap() {
 			saveUninitialized: false,
 			cookie: {
 				secure: api.isProd ? true : false,
-				sameSite: 'lax',
-				httpOnly: false,
-				domain: api.appUri
+				sameSite: 'none',
+				httpOnly: false
 			}
 		})
 	);
