@@ -11,7 +11,7 @@ const fetchEpisodes = async (url: string) => {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			Cookie: document.cookie
+			'Access-Control-Allow-Credentials': 'true'
 		}
 	});
 
