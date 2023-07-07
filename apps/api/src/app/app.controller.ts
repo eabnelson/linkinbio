@@ -233,6 +233,9 @@ export class AppController {
 		@Res() res: Response
 	) {
 		const sessionId = request.sessionID;
+		if (!sessionId) {
+			return res.status(401).send('No session to logout');
+		}
 
 		const accessToken = await this.redisClient.get(`session:${sessionId}`);
 
