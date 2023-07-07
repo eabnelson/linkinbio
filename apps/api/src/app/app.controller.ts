@@ -113,6 +113,7 @@ export class AppController {
 
 			await this.redisClient.set(`session:${request.sessionID}`, access_token);
 
+			res.cookie('sessionId', request.sessionID);
 			res.redirect(`${api.appUri}/episodes`);
 		} catch (error) {
 			console.error(error);
