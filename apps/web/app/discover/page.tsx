@@ -38,9 +38,9 @@ export default function Page() {
 		return (
 			<div className="text-center">
 				<div className="flex h-screen items-center justify-center">
-					<div className="mr-2 animate-spin">💭</div>
+					<div className="mr-2 animate-spin">🎧</div>
 					<h1>loading episode data</h1>
-					<div className="ml-2 animate-spin">💭</div>
+					<div className="ml-2 animate-spin">🎧</div>
 				</div>
 			</div>
 		);
