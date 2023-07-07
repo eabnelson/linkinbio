@@ -9,10 +9,7 @@ const fetchEpisodes = async (url: string) => {
 	console.log('document:', JSON.stringify(document.cookie));
 	const response = await fetch(url, {
 		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Access-Control-Allow-Credentials': 'true'
-		}
+		credentials: 'include'
 	});
 
 	if (response.status === 401) {

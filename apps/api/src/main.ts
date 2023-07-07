@@ -30,7 +30,13 @@ async function bootstrap() {
 			store: sessionStore,
 			secret: api.sessionSecret,
 			resave: false,
-			saveUninitialized: false
+			saveUninitialized: false,
+			cookie: {
+				secure: api.isProd ? true : false,
+				sameSite: 'lax',
+				httpOnly: false,
+				domain: api.appUri
+			}
 		})
 	);
 
