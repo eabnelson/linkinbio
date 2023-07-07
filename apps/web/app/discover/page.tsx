@@ -3,14 +3,17 @@
 import { webEnv } from '../../environments/environments';
 import Auth from '../auth/page';
 import useSWR from 'swr';
+import Cookies from 'js-cookie';
 const { api } = webEnv;
 
 const fetchEpisodeData = async (url: string) => {
+	const jwt = Cookies.get('jwt');
+
 	const response = await fetch(url, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			Cookie: document.cookie
+			Authorization: `Bearer ${jwt}`
 		}
 	});
 
@@ -43,7 +46,7 @@ export default function Page() {
 			</div>
 		);
 
-	if (data.status === 401) return <Auth />;
+	if (data.status === 401 || data.status === 500) return <Auth />;
 
 	if (error) return <div>an error has occurred.</div>;
 

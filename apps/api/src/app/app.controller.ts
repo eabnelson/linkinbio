@@ -5,7 +5,7 @@ import Redis from 'ioredis';
 import axios from 'axios';
 
 import { AppService } from './app.service';
-
+import { sign, verify } from 'jsonwebtoken';
 import { apiEnv } from '../environments/environment';
 
 const { api } = apiEnv;
@@ -114,9 +114,9 @@ export class AppController {
 			request.session.accessToken = access_token;
 			request.session.refreshToken = refresh_token;
 
-			await this.redisClient.set(`session:${request.sessionID}`, access_token);
+			const jwt = sign({ access_token, refresh_token }, api.sessionSecret);
 
-			res.cookie('sessionId', request.sessionID);
+			res.cookie('jwt', jwt);
 			res.redirect(`${api.appUri}/episodes`);
 		} catch (error) {
 			console.error(error);
@@ -130,15 +130,11 @@ export class AppController {
 		@Res() res: SpotifyResponse
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
-		const sessionId = request.sessionID;
 
-		if (!sessionId)
-			console.error('No session id found', JSON.stringify(request.sessionID, null, 2));
-
-		const accessToken = await this.redisClient.get(`session:${sessionId}`);
-
-		if (!accessToken)
-			console.error('No accessToken found', JSON.stringify(request.session, null, 2));
+		const authorizationHeader = request.headers['authorization'];
+		const token = authorizationHeader.replace('Bearer ', '');
+		const decodedToken = verify(token, api.sessionSecret) as { access_token: string };
+		const accessToken = decodedToken.access_token;
 
 		if (!accessToken) {
 			return res.status(401).send('Unauthorized');
@@ -195,9 +191,10 @@ export class AppController {
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 
-		const sessionId = request.sessionID;
-
-		const accessToken = await this.redisClient.get(`session:${sessionId}`);
+		const authorizationHeader = request.headers['authorization'];
+		const token = authorizationHeader.replace('Bearer ', '');
+		const decodedToken = verify(token, api.sessionSecret) as { access_token: string };
+		const accessToken = decodedToken.access_token;
 
 		if (!accessToken) {
 			return res.status(401).send('Unauthorized');
@@ -227,44 +224,19 @@ export class AppController {
 		}
 	}
 
-	@Get('logout')
-	async logout(
-		@Req() request: SpotifyRequest & { session: SpotifySession },
-		@Res() res: Response
-	) {
-		const sessionId = request.sessionID;
-		if (!sessionId) {
-			return res.status(401).send('No session to logout');
-		}
-
-		const accessToken = await this.redisClient.get(`session:${sessionId}`);
-
-		if (accessToken) {
-			await this.redisClient.del(`session:${sessionId}`);
-		}
-
-		if (sessionId) {
-			request.session.destroy((error) => {
-				if (error) {
-					console.error('Error logging out:', error);
-					return res.status(500).send('Error logging out');
-				}
-			});
-		}
-
-		res.status(200).json({ authenticated: false });
-	}
-
 	@Get('auth/check')
 	async checkAuthStatus(@Req() request: SpotifyRequest & { session: SpotifySession }) {
-		const sessionId = request.sessionID;
-		const accessToken = await this.redisClient.get(`session:${sessionId}`);
-
-		if (sessionId && accessToken) {
-			return {
-				authenticated: true
-			};
-		} else {
+		try {
+			const authorizationHeader = request.headers['authorization'];
+			const token = authorizationHeader.replace('Bearer ', '');
+			const decodedToken = verify(token, api.sessionSecret) as { access_token: string };
+			const accessToken = decodedToken.access_token;
+			if (accessToken) {
+				return {
+					authenticated: true
+				};
+			}
+		} catch (error) {
 			return {
 				authenticated: false
 			};

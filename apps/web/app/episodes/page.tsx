@@ -3,12 +3,18 @@
 import { webEnv } from '../../environments/environments';
 import Auth from '../auth/page';
 import useSWR from 'swr';
+import Cookies from 'js-cookie';
 const { api } = webEnv;
 
 const fetchEpisodes = async (url: string) => {
+	const jwt = Cookies.get('jwt');
+
 	const response = await fetch(url, {
 		method: 'GET',
-		credentials: 'include'
+		credentials: 'include',
+		headers: {
+			Authorization: `Bearer ${jwt}`
+		}
 	});
 
 	if (response.status === 401) {
