@@ -18,8 +18,6 @@ async function bootstrap() {
 
 	const redisClient = app.get<Redis.Redis>('REDIS_CLIENT');
 
-	app.set('trust proxy', 1);
-
 	const sessionStore = new RedisStore({
 		client: redisClient
 	});
@@ -37,11 +35,6 @@ async function bootstrap() {
 			}
 		})
 	);
-
-	app.enableCors({
-		origin: [api.appUri, 'http://localhost:4200'],
-		credentials: true
-	});
 
 	app.use(
 		cors({
