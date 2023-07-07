@@ -8,7 +8,6 @@ import * as Redis from 'ioredis';
 
 import { AppModule } from './app/app.module';
 import { apiEnv } from './environments/environment';
-import cors from 'cors';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 const { api } = apiEnv;
@@ -38,12 +37,10 @@ async function bootstrap() {
 		})
 	);
 
-	app.use(
-		cors({
-			credentials: true,
-			origin: [api.appUri, 'http://localhost:4200']
-		})
-	);
+	app.enableCors({
+		origin: [api.appUri, 'http://localhost:4200'],
+		credentials: true
+	});
 
 	app.use(passport.initialize());
 	app.use(passport.session());
