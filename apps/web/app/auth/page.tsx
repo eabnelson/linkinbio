@@ -8,10 +8,7 @@ const { api } = webEnv;
 const authFetcher = async (url: string) => {
 	const response = await fetch(url, {
 		method: 'GET',
-		credentials: 'include',
-		headers: {
-			Cookie: document.cookie
-		}
+		credentials: 'include'
 	});
 
 	const data = await response.json();
@@ -21,7 +18,8 @@ const authFetcher = async (url: string) => {
 export default function Auth() {
 	const handleLogin = async () => {
 		try {
-			const { url } = await authFetcher(`${api.apiUrl}/auth/spotify`);
+			const { url, cookie } = await authFetcher(`${api.apiUrl}/auth/spotify`);
+			document.cookie = cookie;
 			window.location.href = url;
 		} catch (error) {
 			console.error('Error logging in with Spotify:', error);

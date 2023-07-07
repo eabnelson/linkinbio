@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Req, Inject } from '@nestjs/common';
+import { Controller, Get, Res, Req, Inject, Query } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Session } from 'express-session';
 import Redis from 'ioredis';
@@ -53,7 +53,10 @@ export class AppController {
 	}
 
 	@Get('auth/spotify')
-	spotifyAuth(@Res() res: Response) {
+	spotifyAuth(
+		@Req() request: SpotifyRequest & { session: SpotifySession },
+		@Res() res: Response
+	) {
 		const clientId = api.spotify.clientId;
 		const redirectUri = api.spotify.callbackUrl;
 		const scopes = [
@@ -74,7 +77,7 @@ export class AppController {
 
 		const authorizationUrl = `https://accounts.spotify.com/authorize?${queryParameters}`;
 
-		res.json({ url: authorizationUrl });
+		res.json({ url: authorizationUrl, cookie: request.sessionID });
 	}
 
 	@Get('auth/spotify/callback')
@@ -128,6 +131,7 @@ export class AppController {
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 		const sessionId = request.sessionID;
+		console.log('sessionId:', sessionId);
 
 		if (!sessionId)
 			console.error('No session id found', JSON.stringify(request.sessionID, null, 2));
@@ -229,14 +233,15 @@ export class AppController {
 		@Req() request: SpotifyRequest & { session: SpotifySession },
 		@Res() res: Response
 	) {
-		const userId = request.session.userId;
-		const accessToken = await this.redisClient.get(`user:${userId}`);
+		const sessionId = request.sessionID;
+
+		const accessToken = await this.redisClient.get(`session:${sessionId}`);
 
 		if (accessToken) {
-			await this.redisClient.del(`user:${userId}`);
+			await this.redisClient.del(`session:${sessionId}`);
 		}
 
-		if (userId) {
+		if (sessionId) {
 			request.session.destroy((error) => {
 				if (error) {
 					console.error('Error logging out:', error);
