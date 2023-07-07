@@ -30,13 +30,7 @@ async function bootstrap() {
 			store: sessionStore,
 			secret: api.sessionSecret,
 			resave: false,
-			saveUninitialized: false,
-			name: 'alma-session',
-			cookie: {
-				secure: false,
-				sameSite: 'none',
-				httpOnly: false
-			}
+			saveUninitialized: false
 		})
 	);
 
