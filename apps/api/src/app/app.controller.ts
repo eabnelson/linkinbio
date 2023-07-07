@@ -121,10 +121,9 @@ export class AppController {
 			request.session.refreshToken = refresh_token;
 			request.session.userId = userId;
 
-			console.log('request.session:', JSON.stringify(request.session, null, 2));
-
 			await this.redisClient.set(`user:${userId}`, access_token);
 
+			res.cookie('sessionData', JSON.stringify(request.session));
 			res.redirect(`${api.appUri}/episodes`);
 		} catch (error) {
 			console.error(error);

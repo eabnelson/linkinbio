@@ -33,8 +33,11 @@ async function bootstrap() {
 			secret: api.sessionSecret,
 			resave: false,
 			saveUninitialized: false,
+			name: 'alma-session',
 			cookie: {
-				secure: true
+				secure: false,
+				sameSite: false,
+				httpOnly: false
 			}
 		})
 	);

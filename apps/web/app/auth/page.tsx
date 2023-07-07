@@ -7,11 +7,10 @@ const { api } = webEnv;
 
 const authFetcher = async (url: string) => {
 	const response = await fetch(url, { method: 'GET', credentials: 'include' });
+	response.headers.get('Set-Cookie');
 	const data = await response.json();
 	return data;
 };
-
-preload(`${api.apiUrl}/auth/check`, authFetcher);
 
 export default function Auth() {
 	const handleLogin = async () => {
