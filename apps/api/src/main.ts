@@ -9,7 +9,7 @@ import * as Redis from 'ioredis';
 import { AppModule } from './app/app.module';
 import { apiEnv } from './environments/environment';
 
-const { api, redis } = apiEnv;
+const { api } = apiEnv;
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -18,9 +18,7 @@ async function bootstrap() {
 
 	app.enableCors({
 		origin: api.appUri,
-		credentials: true,
-		methods: 'GET, POST, PUT, DELETE',
-		allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+		credentials: true
 	});
 
 	const sessionStore = new RedisStore({
@@ -35,8 +33,8 @@ async function bootstrap() {
 			saveUninitialized: false,
 			name: 'alma-session',
 			cookie: {
-				secure: true,
-				sameSite: 'none',
+				secure: api.isProd ? true : false,
+				sameSite: false,
 				httpOnly: false
 			}
 		})

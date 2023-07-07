@@ -1,19 +1,18 @@
 'use client';
 
-import { Cookie } from 'express-session';
 import { webEnv } from '../../environments/environments';
 import Auth from '../auth/page';
-import { cookies } from 'next/headers';
 import useSWR from 'swr';
+import Cookies from 'js-cookie';
 const { api } = webEnv;
 
 const fetchEpisodes = async (url: string) => {
+	const sessionData = Cookies.get('sessionData');
 	const response = await fetch(url, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Access-Control-Allow-Credentials': 'true',
-			Cookie: cookies().toString()
+			Cookie: `sessionData=${sessionData}`
 		}
 	});
 

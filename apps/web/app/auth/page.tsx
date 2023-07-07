@@ -1,13 +1,21 @@
 'use client';
 
-import useSWR, { mutate, preload } from 'swr';
+import useSWR, { mutate } from 'swr';
 import { webEnv } from '../../environments/environments';
+import Cookies from 'js-cookie';
 
 const { api } = webEnv;
 
 const authFetcher = async (url: string) => {
-	const response = await fetch(url, { method: 'GET', credentials: 'include' });
-	response.headers.get('Set-Cookie');
+	const sessionData = Cookies.get('sessionData');
+	const response = await fetch(url, {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			Cookie: `sessionData=${sessionData}`
+		}
+	});
+
 	const data = await response.json();
 	return data;
 };
