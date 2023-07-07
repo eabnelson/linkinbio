@@ -6,13 +6,9 @@ import useSWR from 'swr';
 const { api } = webEnv;
 
 const fetchEpisodes = async (url: string) => {
-	console.log('document.cookie:', document.cookie);
 	const response = await fetch(url, {
 		method: 'GET',
-		credentials: 'include',
-		headers: {
-			Cookie: document.cookie
-		}
+		credentials: 'include'
 	});
 
 	if (response.status === 401) {

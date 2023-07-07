@@ -8,18 +8,17 @@ import * as Redis from 'ioredis';
 
 import { AppModule } from './app/app.module';
 import { apiEnv } from './environments/environment';
+import cors from 'cors';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 const { api } = apiEnv;
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
 	const redisClient = app.get<Redis.Redis>('REDIS_CLIENT');
 
-	app.enableCors({
-		origin: [api.appUri, 'http://localhost:4200'],
-		credentials: true
-	});
+	app.set('trust proxy', 1);
 
 	const sessionStore = new RedisStore({
 		client: redisClient
@@ -36,6 +35,18 @@ async function bootstrap() {
 				sameSite: api.isProd ? 'none' : false,
 				httpOnly: false
 			}
+		})
+	);
+
+	app.enableCors({
+		origin: [api.appUri, 'http://localhost:4200'],
+		credentials: true
+	});
+
+	app.use(
+		cors({
+			credentials: true,
+			origin: [api.appUri, 'http://localhost:4200']
 		})
 	);
 

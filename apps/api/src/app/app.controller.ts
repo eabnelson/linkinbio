@@ -77,7 +77,7 @@ export class AppController {
 
 		const authorizationUrl = `https://accounts.spotify.com/authorize?${queryParameters}`;
 
-		res.json({ url: authorizationUrl, cookie: request.sessionID });
+		res.json({ url: authorizationUrl });
 	}
 
 	@Get('auth/spotify/callback')
@@ -131,7 +131,6 @@ export class AppController {
 	) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 		const sessionId = request.sessionID;
-		console.log('sessionId:', sessionId);
 
 		if (!sessionId)
 			console.error('No session id found', JSON.stringify(request.sessionID, null, 2));
