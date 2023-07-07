@@ -17,7 +17,7 @@ async function bootstrap() {
 
 	const redisClient = app.get<Redis.Redis>('REDIS_CLIENT');
 
-	app.enable('trust proxy');
+	app.enable('trust proxy', true);
 
 	const sessionStore = new RedisStore({
 		client: redisClient
