@@ -8,6 +8,7 @@ const { api } = webEnv;
 
 const fetchEpisodes = async (url: string) => {
 	const sessionData = Cookies.get('sessionData');
+	console.log('sessionData:', sessionData);
 	const response = await fetch(url, {
 		method: 'GET',
 		credentials: 'include',

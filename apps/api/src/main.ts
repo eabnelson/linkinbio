@@ -33,7 +33,7 @@ async function bootstrap() {
 			saveUninitialized: false,
 			name: 'alma-session',
 			cookie: {
-				secure: api.isProd ? true : false,
+				secure: false,
 				sameSite: false,
 				httpOnly: false
 			}
