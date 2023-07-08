@@ -4,11 +4,10 @@ import { Strategy as SpotifyStrategy } from 'passport-spotify';
 import session from 'express-session';
 import passport from 'passport';
 import RedisStore from 'connect-redis';
-import * as Redis from 'ioredis';
-
 import { AppModule } from './app/app.module';
 import { apiEnv } from './environments/environment';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import * as Redis from 'ioredis';
 import cors from 'cors';
 
 const { api } = apiEnv;
