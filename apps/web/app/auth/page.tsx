@@ -1,7 +1,7 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { deleteCookie, getCookie } from 'cookies-next';
+import { setCookie, getCookie } from 'cookies-next';
 import { webEnv } from '../../environments/environments';
 
 const { api } = webEnv;
@@ -30,7 +30,7 @@ export default function Auth() {
 
 	const handleLogout = async () => {
 		try {
-			deleteCookie('jwt');
+			setCookie('jwt', '', { domain: api.domain });
 			mutate(`${api.apiUrl}/auth/check`);
 		} catch (error) {
 			console.error('Error logging out:', error);
