@@ -63,7 +63,7 @@ async function bootstrap() {
 	const port = api.port;
 	const host = api.host;
 	await app.listen(port, host);
-	Logger.log(`🚀 Application is running on: http://${host}:${port}`);
+	Logger.log(`🎧 Application is running on: http://${host}:${port} 🎧`);
 }
 
 bootstrap().catch(console.log);
