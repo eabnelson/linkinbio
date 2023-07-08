@@ -17,6 +17,7 @@
 		"@types/express-session": "^1.17.7",
 		"axios": "^1.0.0",
 		"connect-redis": "^7.1.0",
+		"cookies-next": "^2.1.2",
 		"cors": "^2.8.5",
 		"express-session": "^1.17.3",
 		"ioredis": "^5.3.2",

@@ -1,13 +1,13 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import Cookies from 'js-cookie';
+import { getCookie, deleteCookie } from 'cookies-next';
 import { webEnv } from '../../environments/environments';
 
 const { api } = webEnv;
 
 const authFetcher = async (url: string) => {
-	const jwt = Cookies.get('jwt');
+	const jwt = getCookie('jwt');
 
 	const response = await fetch(url, {
 		method: 'GET',
@@ -30,7 +30,7 @@ export default function Auth() {
 
 	const handleLogout = async () => {
 		try {
-			Cookies.remove('jwt');
+			deleteCookie('jwt');
 			mutate(`${api.apiUrl}/auth/check`);
 		} catch (error) {
 			console.error('Error logging out:', error);

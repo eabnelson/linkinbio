@@ -3,11 +3,12 @@
 import { webEnv } from '../../environments/environments';
 import Auth from '../auth/page';
 import useSWR from 'swr';
-import Cookies from 'js-cookie';
+import { getCookie } from 'cookies-next';
+
 const { api } = webEnv;
 
 const fetchEpisodeData = async (url: string) => {
-	const jwt = Cookies.get('jwt');
+	const jwt = getCookie('jwt');
 
 	if (!jwt) {
 		console.error('No JWT found in cookies');
