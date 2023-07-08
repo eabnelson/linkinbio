@@ -9,6 +9,11 @@ const { api } = webEnv;
 const fetchEpisodes = async (url: string) => {
 	const jwt = Cookies.get('jwt');
 
+	if (!jwt) {
+		console.error('No JWT found in cookies');
+		return { status: 401, episodes: [] };
+	}
+
 	const response = await fetch(url, {
 		method: 'GET',
 		credentials: 'include',

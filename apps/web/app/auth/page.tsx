@@ -12,11 +12,8 @@ const authFetcher = async (url: string) => {
 	const response = await fetch(url, {
 		method: 'GET',
 		credentials: 'include',
-		headers: {
-			Authorization: `Bearer ${jwt}`
-		}
+		...(jwt && { headers: { Authorization: `Bearer ${jwt}` } })
 	});
-
 	const data = await response.json();
 	return data;
 };

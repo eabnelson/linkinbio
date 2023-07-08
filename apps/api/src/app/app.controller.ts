@@ -53,10 +53,7 @@ export class AppController {
 	}
 
 	@Get('auth/spotify')
-	spotifyAuth(
-		@Req() request: SpotifyRequest & { session: SpotifySession },
-		@Res() res: Response
-	) {
+	spotifyAuth(@Res() res: Response) {
 		const clientId = api.spotify.clientId;
 		const redirectUri = api.spotify.callbackUrl;
 		const scopes = [
@@ -111,10 +108,8 @@ export class AppController {
 
 			const { access_token, refresh_token } = response.data;
 
-			request.session.accessToken = access_token;
-			request.session.refreshToken = refresh_token;
-
 			const jwt = sign({ access_token, refresh_token }, api.sessionSecret);
+			console.log('jwt:', jwt);
 
 			res.cookie('jwt', jwt);
 			res.redirect(`${api.appUri}/episodes`);
@@ -228,6 +223,11 @@ export class AppController {
 	async checkAuthStatus(@Req() request: SpotifyRequest & { session: SpotifySession }) {
 		try {
 			const authorizationHeader = request.headers['authorization'];
+			if (!authorizationHeader) {
+				return {
+					authenticated: false
+				};
+			}
 			const token = authorizationHeader.replace('Bearer ', '');
 			const decodedToken = verify(token, api.sessionSecret) as { access_token: string };
 			const accessToken = decodedToken.access_token;
