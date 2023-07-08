@@ -1,12 +1,11 @@
-import { Controller, Get, Res, Req, Inject, Query } from '@nestjs/common';
+import { Controller, Get, Res, Req, Inject } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Session } from 'express-session';
-import Redis from 'ioredis';
-import axios from 'axios';
-
 import { AppService } from './app.service';
 import { sign, verify } from 'jsonwebtoken';
 import { apiEnv } from '../environments/environment';
+import Redis from 'ioredis';
+import axios from 'axios';
 
 const { api } = apiEnv;
 
@@ -109,7 +108,6 @@ export class AppController {
 			const { access_token, refresh_token } = response.data;
 
 			const jwt = sign({ access_token, refresh_token }, api.sessionSecret);
-			console.log('jwt:', jwt);
 
 			res.cookie('jwt', jwt, {
 				domain: api.domain
