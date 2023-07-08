@@ -111,7 +111,9 @@ export class AppController {
 			const jwt = sign({ access_token, refresh_token }, api.sessionSecret);
 			console.log('jwt:', jwt);
 
-			res.cookie('jwt', jwt);
+			res.cookie('jwt', jwt, {
+				domain: api.domain
+			});
 			res.redirect(`${api.appUri}/episodes`);
 		} catch (error) {
 			console.error(error);
