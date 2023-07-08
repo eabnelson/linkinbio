@@ -32,7 +32,8 @@ async function bootstrap() {
 			cookie: {
 				secure: api.isProd ? true : false,
 				sameSite: api.isProd ? 'none' : false,
-				httpOnly: false
+				httpOnly: false,
+				domain: api.domain
 			}
 		})
 	);
