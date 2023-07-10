@@ -28,10 +28,5 @@ describe('AppController', () => {
 		}).compile();
 	});
 
-	describe('getData', () => {
-		it('should return "Welcome to Alma"', () => {
-			const appController = app.get<AppController>(AppController);
-			expect(appController.getData()).toEqual('Welcome to Alma');
-		});
-	});
+	describe('getData', () => {});
 });

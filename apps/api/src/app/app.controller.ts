@@ -46,11 +46,6 @@ export class AppController {
 		return links;
 	}
 
-	@Get()
-	getData() {
-		return this.appService.getData();
-	}
-
 	@Get('auth/spotify')
 	spotifyAuth(@Res() res: Response) {
 		const clientId = api.spotify.clientId;

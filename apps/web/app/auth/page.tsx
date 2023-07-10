@@ -3,6 +3,10 @@
 import useSWR, { mutate } from 'swr';
 import { setCookie, getCookie } from 'cookies-next';
 import { webEnv } from '../../environments/environments';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+
+//... other imports
 
 const { api } = webEnv;
 
@@ -54,7 +58,7 @@ export default function Auth() {
 				</button>
 			) : (
 				<button onClick={handleLogin}>
-					👀 check out links mentioned in your podcasts 👀
+					check out links mentioned in your podcasts
 					<br />
 					connect your{' '}
 					<span className="text-green-500" style={{ color: '#1DB954' }}>
@@ -63,6 +67,12 @@ export default function Auth() {
 					to get started!
 				</button>
 			)}
+
+			<div className="fixed bottom-0 right-0 p-4 text-blue-500">
+				<a href="https://twitter.com/eabnelson" target="_blank" rel="noopener noreferrer">
+					reach out to get early access <FontAwesomeIcon icon={faTwitter} />
+				</a>{' '}
+			</div>
 		</div>
 	);
 }
