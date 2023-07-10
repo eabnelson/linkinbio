@@ -66,7 +66,7 @@ export default function Page() {
 							<img
 								src={episode.episode.images[0].url}
 								alt={episode.episode.name}
-								className="mr-2 h-16 w-auto rounded-md"
+								className="mr-2 h-16 w-auto "
 							/>
 						)}
 						<div className="text-left">

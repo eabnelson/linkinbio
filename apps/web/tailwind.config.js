@@ -9,6 +9,8 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
+				primary: '#00334e',
+				text: '#e8e8e8',
 				black: '#262217',
 				beigeLight: '#FFFDF8',
 				gray: {
@@ -22,6 +24,9 @@ module.exports = {
 					800: '#514E45',
 					900: '#3C392F'
 				}
+			},
+			maxWidth: {
+				'custom-truncate': '200px'
 			}
 		}
 	},

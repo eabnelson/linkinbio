@@ -112,7 +112,7 @@ export class AppController {
 			res.cookie('jwt', jwt, {
 				domain: api.domain
 			});
-			res.redirect(`${api.appUri}/episodes`);
+			res.redirect(`${api.appUri}/discover`);
 		} catch (error) {
 			console.error(error);
 			res.status(500).send('Error exchanging authorization code for tokens');
@@ -148,6 +148,7 @@ export class AppController {
 						description: item.episode.description,
 						duration_ms: item.episode.duration_ms,
 						html_description: item.episode.html_description,
+						external_urls: item.episode.external_urls,
 						href: item.episode.href,
 						id: item.episode.id,
 						images: item.episode.images,
@@ -207,7 +208,11 @@ export class AppController {
 				const linkMatches = this.parseLinksFromDescription(description);
 
 				return {
-					showName: item.episode.name,
+					episodeId: item.episode.id,
+					episodeLink: item.episode.external_urls.spotify,
+					episodeImage: item.episode.images[0].url,
+					showName: item.episode.show.name,
+					episodeName: item.episode.name,
 					links: linkMatches.map((link: string) => ({ link }))
 				};
 			});
