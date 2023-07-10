@@ -41,7 +41,7 @@ export class AppController {
 		const urlRegex = /(https?:\/\/\S+)/g;
 		const matches = description.match(urlRegex);
 
-		const links = matches?.map((match) => match.replace(/"$/, '')) ?? [];
+		const links = matches?.map((match) => match.replace(/"$/, '').split('<')[0]) ?? [];
 
 		return links;
 	}
