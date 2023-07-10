@@ -1,8 +1,5 @@
 name: on-pr
 on:
-    push:
-        branches:
-            - main
     pull_request:
 
 jobs:
