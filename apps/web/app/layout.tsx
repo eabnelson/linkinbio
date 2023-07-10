@@ -29,11 +29,8 @@ export default function RootLayout({
 							</Link>
 						</div>
 						<div className="ml-auto flex gap-10">
-							<Link href="/episodes" className="text-xs uppercase text-black">
-								episodes
-							</Link>
 							<Link href="/discover" className="text-xs uppercase text-black">
-								discover
+								your episodes
 							</Link>
 						</div>
 					</nav>

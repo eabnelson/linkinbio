@@ -3,6 +3,7 @@
 import { webEnv } from '../../environments/environments';
 import Auth from '../auth/page';
 import useSWR from 'swr';
+import { useState } from 'react';
 import { getCookie } from 'cookies-next';
 
 const { api } = webEnv;
@@ -39,6 +40,12 @@ const fetchEpisodeData = async (url: string) => {
 };
 
 export default function Page() {
+	const [selectedEpisode, setSelectedEpisode] = useState(null);
+	const handleToggleLinks = (episodeId: any) => {
+		setSelectedEpisode((prevEpisodeId: any) =>
+			prevEpisodeId === episodeId ? null : episodeId
+		);
+	};
 	const { data, error } = useSWR(`${api.apiUrl}/discover`, fetchEpisodeData);
 
 	if (!data)
@@ -46,7 +53,7 @@ export default function Page() {
 			<div className="text-center">
 				<div className="flex h-screen items-center justify-center">
 					<div className="mr-2 animate-spin">🎧</div>
-					<h1>loading episode data</h1>
+					<h1>loading episodes</h1>
 					<div className="ml-2 animate-spin">🎧</div>
 				</div>
 			</div>
@@ -59,30 +66,75 @@ export default function Page() {
 	const { episodes } = data;
 
 	return (
-		<ul>
-			{episodes.map((episode: any, index: number) => {
-				if (episode.links.length === 0) {
-					return null; // Skip the episode if the links array is empty
-				}
+		<div className="flex justify-center">
+			<ul className="text-center">
+				{episodes.map((episode: any) => {
+					if (episode.links.length === 0) {
+						return null; // Skip the episode if the links array is empty
+					}
 
-				return (
-					<li key={index}>
-						<div className="my-4">
-							<h3 className="text-lg font-bold">{episode.showName}</h3>
-							{episode.links.map((link: any, linkIndex: number) => (
-								<a
-									href={link.link}
-									key={linkIndex}
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									<div className="text-blue-500">{link.link}</div>
-								</a>
-							))}
-						</div>
-					</li>
-				);
-			})}
-		</ul>
+					return (
+						<li key={episode.episodeId} className="mb-4">
+							<div className="flex items-center">
+								{episode.episodeImage && (
+									<img
+										src={episode.episodeImage}
+										alt={episode.episodeName}
+										className="mr-2 h-20 w-auto"
+									/>
+								)}
+								<div className="text-left">
+									<div className="text-lg">
+										<span>{episode.episodeName}</span>
+									</div>
+									<div className="text-sm font-bold italic">
+										{episode.showName}
+									</div>
+									<div className="flex items-center">
+										<button
+											onClick={() => handleToggleLinks(episode.episodeId)}
+											className="mr-2 text-blue-500"
+										>
+											browse episode
+										</button>
+										<span>|</span>
+										<a
+											href={episode.episodeLink}
+											rel="noopener noreferrer"
+											className="flex items-center"
+										>
+											<span
+												className="ml-2 mr-2 text-green-500"
+												style={{ color: '#1DB954' }}
+											>
+												listen on Spotify
+											</span>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div className="text-left">
+								{selectedEpisode === episode.episodeId && (
+									<ul className="custom-truncate pl-4">
+										{episode.links.map((link: any) => (
+											<li key={link.link}>
+												<a
+													href={link.link}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="text-blue-500"
+												>
+													{link.link}
+												</a>
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
+						</li>
+					);
+				})}
+			</ul>
+		</div>
 	);
 }

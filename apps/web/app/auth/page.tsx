@@ -47,11 +47,20 @@ export default function Auth() {
 		<div className="text-center">
 			{data?.authenticated ? (
 				<button onClick={handleLogout}>
-					disconnect <span className="text-green-500">Spotify</span>
+					disconnect{' '}
+					<span className="text-green-500" style={{ color: '#1DB954' }}>
+						Spotify
+					</span>
 				</button>
 			) : (
 				<button onClick={handleLogin}>
-					connect your <span className="text-green-500">Spotify</span> to get started
+					👀 check out links mentioned in your podcasts 👀
+					<br />
+					connect your{' '}
+					<span className="text-green-500" style={{ color: '#1DB954' }}>
+						Spotify
+					</span>{' '}
+					to get started!
 				</button>
 			)}
 		</div>
