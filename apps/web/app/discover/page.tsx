@@ -93,7 +93,7 @@ export default function Page() {
 									<div className="flex items-center">
 										<button
 											onClick={() => handleToggleLinks(episode.episodeId)}
-											className="mr-2 text-blue-500"
+											className="mr-1 text-blue-500"
 										>
 											browse episode
 										</button>
@@ -104,11 +104,16 @@ export default function Page() {
 											className="flex items-center"
 										>
 											<span
-												className="ml-2 mr-2 text-green-500"
+												className="ml-1 mr-1 text-green-500"
 												style={{ color: '#1DB954' }}
 											>
 												listen on Spotify
 											</span>
+											<img
+												src="/Spotify_Icon_RGB_Green.png"
+												alt="Spotify"
+												className="h-3 w-auto"
+											/>
 										</a>
 									</div>
 								</div>

@@ -1,7 +1,7 @@
 export default function Head() {
 	return (
 		<>
-			<title>alma</title>
+			<title>linkinbio.dev</title>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		</>
 	);

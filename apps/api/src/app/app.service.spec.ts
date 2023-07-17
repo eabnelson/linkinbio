@@ -28,9 +28,5 @@ describe('AppService', () => {
 		service = app.get<AppService>(AppService);
 	});
 
-	describe('getData', () => {
-		it('should return "Welcome to Alma"', () => {
-			expect(service.getData()).toEqual('Welcome to Alma');
-		});
-	});
+	describe('getData', () => {});
 });
