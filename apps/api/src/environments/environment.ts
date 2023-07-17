@@ -22,11 +22,6 @@ export const apiEnv: IApiEnv = {
 	},
 	db: {
 		url: process.env.ALMA_DB_URL
-	},
-	redis: {
-		host: isProd ? process.env.REDIS_HOST_PROD : process.env.REDIS_HOST_DEV,
-		port: isProd ? Number(process.env.REDIS_PORT_PROD) : Number(process.env.REDIS_PORT_DEV),
-		password: isProd ? process.env.REDIS_PASSWORD_PROD : process.env.REDIS_PASSWORD_DEV
 	}
 };
 
@@ -48,10 +43,5 @@ export interface IApiEnv {
 	};
 	db: {
 		url: string;
-	};
-	redis: {
-		host: string;
-		port: number;
-		password: string;
 	};
 }

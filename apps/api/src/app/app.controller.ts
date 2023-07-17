@@ -1,10 +1,7 @@
-import { Controller, Get, Res, Req, Inject } from '@nestjs/common';
+import { Controller, Get, Res, Req } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { Session } from 'express-session';
-import { AppService } from './app.service';
 import { sign, verify } from 'jsonwebtoken';
 import { apiEnv } from '../environments/environment';
-import Redis from 'ioredis';
 import axios from 'axios';
 
 const { api } = apiEnv;
@@ -24,18 +21,9 @@ interface SpotifyResponse extends Response {
 	};
 }
 
-interface SpotifySession extends Session {
-	accessToken?: string;
-	refreshToken?: string;
-	userId?: string;
-}
-
 @Controller()
 export class AppController {
-	constructor(
-		private readonly appService: AppService,
-		@Inject('REDIS_CLIENT') private readonly redisClient: Redis
-	) {}
+	constructor() {}
 
 	private parseLinksFromDescription(description: string): string[] {
 		const urlRegex = /(https?:\/\/\S+)/g;
@@ -72,10 +60,7 @@ export class AppController {
 	}
 
 	@Get('auth/spotify/callback')
-	async spotifyAuthCallback(
-		@Req() request: SpotifyRequest & { session: SpotifySession },
-		@Res() res: SpotifyResponse
-	) {
+	async spotifyAuthCallback(@Req() request: SpotifyRequest, @Res() res: SpotifyResponse) {
 		const code = request.query.code;
 
 		const clientId = api.spotify.clientId;
@@ -115,10 +100,7 @@ export class AppController {
 	}
 
 	@Get('episodes')
-	async getUserEpisodes(
-		@Req() request: SpotifyRequest & { session: SpotifySession },
-		@Res() res: SpotifyResponse
-	) {
+	async getUserEpisodes(@Req() request: SpotifyRequest, @Res() res: SpotifyResponse) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 
 		const authorizationHeader = request.headers['authorization'];
@@ -176,10 +158,7 @@ export class AppController {
 	}
 
 	@Get('discover')
-	async getEpisodeContent(
-		@Req() request: SpotifyRequest & { session: SpotifySession },
-		@Res() res: SpotifyResponse
-	) {
+	async getEpisodeContent(@Req() request: SpotifyRequest, @Res() res: SpotifyResponse) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
 
 		const authorizationHeader = request.headers['authorization'];
@@ -220,7 +199,7 @@ export class AppController {
 	}
 
 	@Get('auth/check')
-	async checkAuthStatus(@Req() request: SpotifyRequest & { session: SpotifySession }) {
+	async checkAuthStatus(@Req() request: SpotifyRequest) {
 		try {
 			const authorizationHeader = request.headers['authorization'];
 			if (!authorizationHeader) {
