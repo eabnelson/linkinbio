@@ -1,29 +1,11 @@
 import { Test } from '@nestjs/testing';
-import Redis from 'ioredis';
-
 import { AppService } from './app.service';
-
-import { apiEnv } from '../environments/environment';
-
-const { redis } = apiEnv;
 
 describe('AppService', () => {
 	let service: AppService;
 
 	beforeAll(async () => {
-		const app = await Test.createTestingModule({
-			providers: [
-				AppService,
-				{
-					provide: 'REDIS_CLIENT',
-					useValue: new Redis({
-						host: redis.host,
-						port: redis.port,
-						password: redis.password
-					})
-				}
-			]
-		}).compile();
+		const app = await Test.createTestingModule({}).compile();
 
 		service = app.get<AppService>(AppService);
 	});
