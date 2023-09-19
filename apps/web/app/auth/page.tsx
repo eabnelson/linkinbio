@@ -4,7 +4,7 @@ import useSWR, { mutate } from 'swr';
 import { setCookie, getCookie } from 'cookies-next';
 import { webEnv } from '../../environments/environments';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faXTwitter } from '@fortawesome/free-brands-svg-icons';
 
 //... other imports
 
@@ -68,10 +68,10 @@ export default function Auth() {
 				</button>
 			)}
 
-			<div className="fixed bottom-0 right-0 p-4 text-blue-500">
-				<a href="https://twitter.com/eabnelson" target="_blank" rel="noopener noreferrer">
-					reach out to get early access <FontAwesomeIcon icon={faTwitter} />
-				</a>{' '}
+			<div className="fixed inset-x-0 bottom-0 flex items-center justify-center p-4">
+				<a href="https://x.com/eabnelson" target="_blank" rel="noopener noreferrer">
+					built by erik <FontAwesomeIcon icon={faXTwitter} />
+				</a>
 			</div>
 		</div>
 	);

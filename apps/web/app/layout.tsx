@@ -25,7 +25,7 @@ export default function RootLayout({
 					<nav className="sticky top-0 z-10 flex h-20 items-center justify-between bg-white md:h-28 lg:h-36">
 						<div>
 							<Link href="/" className="text-lg font-bold uppercase text-black">
-								alma
+								linkinbio
 							</Link>
 						</div>
 						<div className="ml-auto flex gap-10">
