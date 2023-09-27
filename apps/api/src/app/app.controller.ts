@@ -102,64 +102,6 @@ export class AppController {
 		}
 	}
 
-	@Get('episodes')
-	async getUserEpisodes(@Req() request: SpotifyRequest, @Res() res: SpotifyResponse) {
-		const url = 'https://api.spotify.com/v1/me/episodes';
-
-		const authorizationHeader = request.headers['authorization'];
-		const token = authorizationHeader.replace('Bearer ', '');
-		const decodedToken = verify(token, api.sessionSecret) as { access_token: string };
-		const accessToken = decodedToken.access_token;
-
-		if (!accessToken) {
-			return res.status(401).send('Unauthorized');
-		}
-
-		try {
-			const response = await axios.get(url, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			});
-			const episodes = response.data.items.map((item) => {
-				return {
-					added_at: item.added_at,
-					episode: {
-						description: item.episode.description,
-						duration_ms: item.episode.duration_ms,
-						html_description: item.episode.html_description,
-						external_urls: item.episode.external_urls,
-						href: item.episode.href,
-						id: item.episode.id,
-						images: item.episode.images,
-						name: item.episode.name,
-						release_date: item.episode.release_date,
-						resume_point: item.episode.resume_point,
-						show: {
-							description: item.episode.show.description,
-							href: item.episode.show.href,
-							html_description: item.episode.show.html_description,
-							id: item.episode.show.id,
-							images: item.episode.show.images,
-							name: item.episode.show.name,
-							publisher: item.episode.show.publisher,
-							total_episodes: item.episode.show.total_episodes,
-							type: item.episode.show.type,
-							uri: item.episode.show.uri
-						},
-						type: item.episode.type,
-						uri: item.episode.uri
-					}
-				};
-			});
-
-			res.json(episodes);
-		} catch (error) {
-			console.error(error);
-			res.status(500).send('Error retrieving episodes');
-		}
-	}
-
 	@Get('discover')
 	async getEpisodeContent(@Req() request: SpotifyRequest, @Res() res: SpotifyResponse) {
 		const url = 'https://api.spotify.com/v1/me/episodes';
