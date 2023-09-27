@@ -31,7 +31,10 @@ export class AppController {
 
 		const links = matches?.map((match) => match.replace(/"$/, '').split('<')[0]) ?? [];
 
-		return links;
+		// Remove duplicates
+		const uniqueLinks = Array.from(new Set(links));
+
+		return uniqueLinks;
 	}
 
 	@Get('auth/spotify')
