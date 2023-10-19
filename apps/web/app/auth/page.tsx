@@ -4,9 +4,7 @@ import useSWR, { mutate } from 'swr';
 import { setCookie, getCookie } from 'cookies-next';
 import { webEnv } from '../../environments/environments';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXTwitter } from '@fortawesome/free-brands-svg-icons';
-
-//... other imports
+import { faXTwitter, faGithub } from '@fortawesome/free-brands-svg-icons';
 
 const { api } = webEnv;
 
@@ -69,8 +67,21 @@ export default function Auth() {
 			)}
 
 			<div className="fixed inset-x-0 bottom-0 flex items-center justify-center p-4">
-				<a href="https://x.com/eabnelson" target="_blank" rel="noopener noreferrer">
+				<a
+					href="https://x.com/eabnelson"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="text-lg"
+				>
 					built by erik <FontAwesomeIcon icon={faXTwitter} />
+				</a>
+				<a
+					href="https://github.com/eabnelson/alma"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="text-secondary ml-6 text-lg"
+				>
+					how? <FontAwesomeIcon icon={faGithub} />
 				</a>
 			</div>
 		</div>
